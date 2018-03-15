@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  <title>CannyJS Remake to ECM6</title>
+  <script src="public/js/main.js"></script>
+  <script type="text/javascript">
+    window.onload = function(){
+      let canvas1 = document.getElementById('canvas1');
+      let canvas2 = document.getElementById('canvas2');
+      let ctx = canvas1.getContext('2d');
+      let image1Btn = document.getElementById("image1");
+      let image2Btn = document.getElementById("image2");
+      let image3Btn = document.getElementById("image3");
+      let htInput = document.getElementById("high-threshold");
+      let ltInput = document.getElementById("low-threshold");
+      let sigmmaInput = document.getElementById("sigmma");
+      let kernelSizeInput = document.getElementById("kernelSize");
+      let executeBtn = document.getElementById("execute");
+
+      let loadImage = function(url){
+        let img = new Image();
+        img.src=url
+        img.onload= function(){
+          canvas1.width = img.width;
+          canvas2.width = img.width;
+          canvas1.height = img.height;
+          canvas2.height = img.height;
+          ctx.drawImage(img,0,0);
+        }
+      }
+      let onButtonClick = function(e){
+        loadImage(e.target.value);
+      }
+      image1Btn.addEventListener("click", onButtonClick);
+      image2Btn.addEventListener("click", onButtonClick);
+      image3Btn.addEventListener("click", onButtonClick);
+
+      let execute = function() {
+        let ht = parseInt(htInput.value);
+        let lt = parseInt(ltInput.value);
+        let sigmma = parseFloat(sigmmaInput.value);
+        let kernelSize = parseInt(kernelSizeInput.value);
+        if (typeof(Worker) !== "undefined" && window.Worker) {
+          // Yes! Web worker support!
+          let start = new Date;
+          let worker = new Worker("public/js/worker.js");
+          let canvasWidth = canvas1.width;
+          let canvasHeight = canvas1.height;
+          let canvasRawDate = canvas1.getContext('2d').getImageData(0, 0, canvas1.width, canvas1.height).data;
+          worker.postMessage([canvasWidth, canvasHeight, canvasRawDate, ht, lt, sigmma, kernelSize]);
+          worker.onmessage = function(e) {
+            console.log('Message received from worker');
+            let finish = new Date;
+            let duration = (finish-start)/1000;
+            console.log("Detection finished. Duration: "+duration+" seconds.");
+            let image = new GrayImageData(canvas1.width, canvas1.height);
+            image.setData(e.data.data);
+            image.drawOn(canvas2);
+          };
+        } else {
+          let start = new Date;
+          let CannyJS = new CannyEdgeDetection();
+          let image = CannyJS.canny(canvas1, ht, lt, sigmma, kernelSize);
+          let finish = new Date;
+          let duration = (finish-start)/1000;
+          console.log("Detection finished. Duration: "+duration+" seconds.");
+          image.drawOn(canvas2);
+        }
+        // let finish = new Date;
+        // let duration = (finish-start)/1000;
+        // console.log("Detection finished. Duration: "+duration+" seconds.");
+      }
+      executeBtn.addEventListener("click", execute);
+      loadImage("ukiyo-e.png");
+    }
+  </script>
+</head>
+
+<body>
+  <h1>Canny JS: A JavaScript Implementation of Canny Edge Detection</h1>
+  <div>
+    <label>Switch image:</label>
+    <button id="image1" value="ukiyo-e.png">Image 1</button>
+    <button id="image2" value="car.jpg">Image 2</button>
+    <button id="image3" value="nishida_2.jpeg">Image 3</button>
+  </div>
+  <div>
+    <label>high threshold (0-255):</label>
+    <input type="text" id="high-threshold" value="100"></input><br/>
+    <label>low threshold (0-255):</label>
+    <input type="text" id="low-threshold" value="50"></input><br/>
+    <label>sigmma (0.0-):</label>
+    <input type="text" id="sigmma" value="1.4"></input><br/>
+    <label>kernel size (odd number):</label>
+    <input type="text" id="kernelSize" value="3"></input><br/>
+
+  <div/>
+  <div>
+    <button id="execute">Detect edges</button>
+  </div>
+  <canvas id="canvas1" width="400px" height="600px"></canvas>
+  <canvas id="canvas2" width="400px" height="600px"></canvas>
+</html>
