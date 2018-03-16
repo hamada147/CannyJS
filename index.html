@@ -1,41 +1,268 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
-
+  <style type="text/css">
+    html, body {
+      margin: 0;
+      padding: 0;
+    }
+    #progress-bar {
+      transition: all, 0.5s linear 0s;
+      width: 50%;
+      background-color: #eee;
+      border-radius: 2px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+    }
+    #drop-area {
+      width: 50%;
+      height: 100px;
+      box-sizing: border-box;
+      padding-bottom: 15px;
+      border: 0.25rem dashed #A5A5C7;
+      cursor: default;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    #drop-area > h3 {
+      color: #868e96;
+      text-align: center;
+    }
+    #drop-area > .btn {
+      position: relative;
+      border-radius: 12px;
+      padding: 7px;
+      width: 50%;
+      margin: auto;
+      color: #fff;
+      background-color: #007bff;
+      cursor: pointer;
+      background-image: none;
+    }
+    #drop-area > .btn > span {
+      color: #fff;
+    }
+    #drop-area > .btn input[type=file] {
+      position: absolute;
+      top: 0;
+      right: 0;
+      margin: 0;
+      border: solid transparent;
+      width: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+    h1 {
+      margin-top: 0;
+      padding-top: 0.67em;
+    }
+    #loading {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: 5;
+      transition: all, 0.5s linear 0s;
+      display: none;
+    }
+    .sk-folding-cube {
+      top: 50%;
+      margin: auto;
+      width: 40px;
+      height: 40px;
+      position: relative;
+      -webkit-transform: rotateZ(45deg);
+      transform: rotateZ(45deg);
+    }
+    .sk-folding-cube .sk-cube {
+      float: left;
+      width: 50%;
+      height: 50%;
+      position: relative;
+      -webkit-transform: scale(1.1);
+      -ms-transform: scale(1.1);
+      transform: scale(1.1);
+    }
+    .sk-folding-cube .sk-cube:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #333;
+      -webkit-animation: sk-foldCubeAngle 2.4s infinite linear both;
+      animation: sk-foldCubeAngle 2.4s infinite linear both;
+      -webkit-transform-origin: 100% 100%;
+      -ms-transform-origin: 100% 100%;
+      transform-origin: 100% 100%;
+    }
+    .sk-folding-cube .sk-cube2 {
+      -webkit-transform: scale(1.1) rotateZ(90deg);
+      transform: scale(1.1) rotateZ(90deg);
+    }
+    .sk-folding-cube .sk-cube3 {
+      -webkit-transform: scale(1.1) rotateZ(180deg);
+      transform: scale(1.1) rotateZ(180deg);
+    }
+    .sk-folding-cube .sk-cube4 {
+      -webkit-transform: scale(1.1) rotateZ(270deg);
+      transform: scale(1.1) rotateZ(270deg);
+    }
+    .sk-folding-cube .sk-cube2:before {
+      -webkit-animation-delay: 0.3s;
+      animation-delay: 0.3s;
+    }
+    .sk-folding-cube .sk-cube3:before {
+      -webkit-animation-delay: 0.6s;
+      animation-delay: 0.6s;
+    }
+    .sk-folding-cube .sk-cube4:before {
+      -webkit-animation-delay: 0.9s;
+      animation-delay: 0.9s;
+    }
+    @-webkit-keyframes sk-foldCubeAngle {
+      0%, 10% {
+        -webkit-transform: perspective(140px) rotateX(-180deg);
+        transform: perspective(140px) rotateX(-180deg);
+        opacity: 0;
+      }
+      25%, 75% {
+        -webkit-transform: perspective(140px) rotateX(0deg);
+        transform: perspective(140px) rotateX(0deg);
+        opacity: 1;
+      }
+      90%, 100% {
+        -webkit-transform: perspective(140px) rotateY(180deg);
+        transform: perspective(140px) rotateY(180deg);
+        opacity: 0;
+      } 
+    }
+    @keyframes sk-foldCubeAngle {
+      0%, 10% {
+        -webkit-transform: perspective(140px) rotateX(-180deg);
+        transform: perspective(140px) rotateX(-180deg);
+        opacity: 0; 
+      }
+      25%, 75% {
+        -webkit-transform: perspective(140px) rotateX(0deg);
+        transform: perspective(140px) rotateX(0deg);
+        opacity: 1; 
+      }
+      90%, 100% {
+        -webkit-transform: perspective(140px) rotateY(180deg);
+        transform: perspective(140px) rotateY(180deg);
+        opacity: 0; 
+      }
+    }
+  </style>
   <title>CannyJS Remake to ECM6</title>
-  <script src="public/js/CannyJS.js"></script>
+  <script src="public/js/Cannyjs.js"></script>
+  <script type="text/javascript" src="public/js/jquery-3.3.1.min.js"></script>
+  <script type="text/javascript" src="public/js/jquery.dm-uploader.js"></script>
   <script type="text/javascript">
-    window.onload = function(){
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js').then(function(registration) {
+        console.log('Registration successful, scope is:', registration.scope);
+      }).catch(function(error) {
+        console.log('Service worker registration failed, error:', error);
+      });
+    }
+
+    function getRandomColor() {
+      let letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+
+    function changeLoadingIndicatorToRandomColor() {
+      let loadingElements = document.getElementsByClassName("sk-cube");
+      let randomColor = getRandomColor();
+      for (let i = 0, size = loadingElements.length; i < size; i++) {
+        loadingElements[i].style.backgroundColor = randomColor;
+      }
+    }
+
+    function showLoadingIndicator() {
+      // changeLoadingIndicatorToRandomColor();
+      loading.style.display = 'block';
+    }
+
+    function hideLoadingIndicator() {
+      // 
+      loading.style.display = 'none';
+    }
+
+    window.onload = function() {
       let canvas1 = document.getElementById('canvas1');
       let canvas2 = document.getElementById('canvas2');
       let ctx = canvas1.getContext('2d');
       let image1Btn = document.getElementById("image1");
       let image2Btn = document.getElementById("image2");
       let image3Btn = document.getElementById("image3");
+      // let uploadBtn = document.getElementById("custom-image");
       let htInput = document.getElementById("high-threshold");
       let ltInput = document.getElementById("low-threshold");
       let sigmmaInput = document.getElementById("sigmma");
       let kernelSizeInput = document.getElementById("kernelSize");
       let executeBtn = document.getElementById("execute");
 
-      let loadImage = function(url){
+      const loading = document.getElementById("loading");
+      const uploadingProgress = document.getElementById("progress-bar");
+
+      let loadImage = function(url) {
         let img = new Image();
-        img.src=url
-        img.onload= function(){
+        img.src = url;
+        // draw loading here
+        showLoadingIndicator();
+        img.onload= function() {
           canvas1.width = img.width;
           canvas2.width = img.width;
           canvas1.height = img.height;
           canvas2.height = img.height;
-          ctx.drawImage(img,0,0);
+          ctx.drawImage(img, 0, 0);
+          // hide loading here
+          hideLoadingIndicator();
         }
       }
-      let onButtonClick = function(e){
+      let onButtonClick = function(e) {
         loadImage(e.target.value);
       }
+
+      $("#drop-area").dmUploader({
+        url: 'upload.php',
+        onFallbackMode: function() {
+          console.log("shit do happens");
+        },
+        onInit: function(){
+          console.log('Callback: Plugin initialized');
+        },
+        onUploadProgress: function(id, percent) {
+          uploadingProgress.value = percent;
+        },
+        onBeforeUpload: function(id) {
+          uploadingProgress.value = '0';
+          console.log('before uploading');
+        },
+        onUploadSuccess: function(id, data) {
+          console.log('finished uploading');
+          loadImage(data.path);
+        },
+        onUploadError: function(id, xhr, status, errorThrown) {
+          console.log(errorThrown);
+        }
+      });
+
       image1Btn.addEventListener("click", onButtonClick);
       image2Btn.addEventListener("click", onButtonClick);
       image3Btn.addEventListener("click", onButtonClick);
+      // uploadBtn.addEventListener("click", uploadImage);
 
       let execute = function() {
         let ht = parseInt(htInput.value);
@@ -49,6 +276,8 @@
           let canvasWidth = canvas1.width;
           let canvasHeight = canvas1.height;
           let canvasRawDate = canvas1.getContext('2d').getImageData(0, 0, canvas1.width, canvas1.height).data;
+          // draw loading here
+          showLoadingIndicator();
           worker.postMessage([canvasWidth, canvasHeight, canvasRawDate, ht, lt, sigmma, kernelSize]);
           worker.onmessage = function(e) {
             console.log('Message received from worker');
@@ -58,6 +287,8 @@
             let image = new GrayImageData(canvas1.width, canvas1.height);
             image.setData(e.data.data);
             image.drawOn(canvas2);
+            // hide loading here
+            hideLoadingIndicator();
           };
         } else {
           let start = new Date;
@@ -68,9 +299,6 @@
           console.log("Detection finished. Duration: "+duration+" seconds.");
           image.drawOn(canvas2);
         }
-        // let finish = new Date;
-        // let duration = (finish-start)/1000;
-        // console.log("Detection finished. Duration: "+duration+" seconds.");
       }
       executeBtn.addEventListener("click", execute);
       loadImage("ukiyo-e.png");
@@ -79,27 +307,43 @@
 </head>
 
 <body>
+  <div id="loading">
+    <div class="sk-folding-cube">
+      <div class="sk-cube1 sk-cube"></div>
+      <div class="sk-cube2 sk-cube"></div>
+      <div class="sk-cube4 sk-cube"></div>
+      <div class="sk-cube3 sk-cube"></div>
+    </div>
+  </div>
   <h1>Canny JS: A JavaScript Implementation of Canny Edge Detection</h1>
   <div>
     <label>Switch image:</label>
     <button id="image1" value="ukiyo-e.png">Image 1</button>
     <button id="image2" value="car.jpg">Image 2</button>
-    <button id="image3" value="nishida_2.jpeg">Image 3</button>
+    <button id="image3" value="nishida_2.jpeg">Image 3</button><br/>
+    <div id="drop-area">
+      <h3>Drag and Drop Files Here</h3>
+      <div class="btn">
+        <span>Open the file Browser</span>
+        <input name="image_field" type="file" title="Click to add Files" />
+      </div>
+    </div>
+    <progress id="progress-bar" value="0" max="100">
   </div>
   <div>
     <label>high threshold (0-255):</label>
-    <input type="text" id="high-threshold" value="100"></input><br/>
+    <input type="text" id="high-threshold" value="100"><br/>
     <label>low threshold (0-255):</label>
-    <input type="text" id="low-threshold" value="50"></input><br/>
+    <input type="text" id="low-threshold" value="50"><br/>
     <label>sigmma (0.0-):</label>
-    <input type="text" id="sigmma" value="1.4"></input><br/>
+    <input type="text" id="sigmma" value="1.4"><br/>
     <label>kernel size (odd number):</label>
-    <input type="text" id="kernelSize" value="3"></input><br/>
-
-  <div/>
+    <input type="text" id="kernelSize" value="3"><br/>
+  </div>
   <div>
     <button id="execute">Detect edges</button>
   </div>
   <canvas id="canvas1" width="400px" height="600px"></canvas>
   <canvas id="canvas2" width="400px" height="600px"></canvas>
+</body>
 </html>
