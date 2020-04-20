@@ -1,5 +1,5 @@
 onmessage = function(e) {
-  importScripts("Cannyjs.js");
+  importScripts("CannyJS.js");
   console.log('Message received from main script');
   let CannyJS = new CannyEdgeDetection();
   // canvasWidth, canvasHeight, canvasRawDate, ht, lt, sigmma, kernelSize
