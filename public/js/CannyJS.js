@@ -21,7 +21,7 @@ class Util {
     for (let x = 0, _w = w - 1; x <= _w; x++) {
       matrix[x] = [];
       for (let y = 0, _h = h - 1; y <= _h; y++) {
-        matrix[x][y] = initialValue
+        matrix[x][y] = initialValue;
       }
     }
     return matrix;
@@ -77,7 +77,7 @@ class GrayImageData {
   * @param {object} canvas object
   */
   loadCanvas(canvas) {
-    let ctx = canvas.getContext('2d');
+    let ctx = canvas.getContext("2d");
     let rawdata = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
     let x = 0;
     let y = 0;
