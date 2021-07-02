@@ -1,3 +1,4 @@
+/*global CannyEdgeDetection*/
 onmessage = function(e) {
   importScripts("CannyJS.js");
   // console.log("Message received from main script");
