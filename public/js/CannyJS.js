@@ -173,7 +173,7 @@ class GrayImageData {
   * @param {object} target canvas object
   */
   drawOn(canvas) {
-    let ctx = canvas.getContext('2d');
+    let ctx = canvas.getContext("2d");
     let imgData = ctx.createImageData(canvas.width, canvas.height);
     let colors = this.toImageDataArray();
     for (let i = 0, _len = colors.length; i < _len; i++) {
