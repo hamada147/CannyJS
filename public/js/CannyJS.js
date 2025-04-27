@@ -13,7 +13,7 @@
  ********************************************************/
 
 /**
-  * class that represnts Utility
+  * class that represents Utility
   */
 class Util {
   static generateMatrix(w, h, initialValue) {
@@ -53,15 +53,15 @@ class GrayImageData {
 
   /**
    * load image from canvas sent data and store it as a matrix of gray-scaled pixels
-   * @param {array} canvas data object
+   * @param rawData
    */
-  loadCanvasFromData(rawdata) {
+  loadCanvasFromData(rawData) {
     let x = 0;
     let y = 0;
-    for (let i = 0, _len = rawdata.length; i < _len; i+= 4) {
-      let r = rawdata[i];
-      let g = rawdata[i + 1];
-      let b = rawdata[i + 2];
+    for (let i = 0, _len = rawData.length; i < _len; i+= 4) {
+      let r = rawData[i];
+      let g = rawData[i + 1];
+      let b = rawData[i + 2];
       this.data[x][y] = Math.round((0.298 * r) + (0.586 * g) + (0.114 * b));
       if (x === (this.width - 1)) {
         x = 0;
@@ -77,14 +77,14 @@ class GrayImageData {
   * @param {object} canvas object
   */
   loadCanvas(canvas) {
-    let ctx = canvas.getContext("2d");
-    let rawdata = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    let ctx = canvas.getContext("2d", { willReadFrequently: true });
+    let rawData = ctx.getImageData(0, 0, canvas.width, canvas.height, { willReadFrequently: true }).data;
     let x = 0;
     let y = 0;
-    for (let i = 0, _len = rawdata.length; i < _len; i+= 4) {
-      let r = rawdata[i];
-      let g = rawdata[i + 1];
-      let b = rawdata[i + 2];
+    for (let i = 0, _len = rawData.length; i < _len; i+= 4) {
+      let r = rawData[i];
+      let g = rawData[i + 1];
+      let b = rawData[i + 2];
       this.data[x][y] = Math.round((0.298 * r) + (0.586 * g) + (0.114 * b));
       if (x === (this.width - 1)) {
         x = 0;
@@ -97,8 +97,8 @@ class GrayImageData {
 
   /**
   * get the neighbor of a given point
-  * @param {number} x corrdinate of the point
-  * @param {number} y corrdinate of the point
+  * @param {number} x coordinate of the point
+  * @param {number} y coordinate of the point
   * @param {number} size of the neighbors
   * @return {array} matrix of the neighbor of the point
   */
@@ -120,10 +120,10 @@ class GrayImageData {
    }
 
   /**
-  * iterate all the pixel in the image data
-  * @param {number} size of the neighbors given to
-  * @param {function} function that will applied to the pixel
-  */
+   * iterate all the pixel in the image data
+   * @param neighborSize
+   * @param func
+   */
   eachPixel(neighborSize, func) {
     for (let x = 0, _w = this.width - 1; x <= _w; x++) {
       for (let y = 0, _y = this.height - 1; y <= _y; y++) {
@@ -170,15 +170,14 @@ class GrayImageData {
 
   /**
   * draw the image on a given canvas
-  * @param {object} target canvas object
+  * @param {object} canvas canvas object
   */
   drawOn(canvas) {
-    let ctx = canvas.getContext("2d");
+    let ctx = canvas.getContext("2d", { willReadFrequently: true });
     let imgData = ctx.createImageData(canvas.width, canvas.height);
     let colors = this.toImageDataArray();
     for (let i = 0, _len = colors.length; i < _len; i++) {
-      let color = colors[i];
-      imgData.data[i] = color;
+      imgData.data[i] = colors[i];
     }
     ctx.putImageData(imgData, 0, 0);
   }
@@ -188,7 +187,6 @@ class GrayImageData {
   * @param {number} color to fill
   */
   fill(color) {
-    let start = new Date;
     for (let y = 0, _h = this.height - 1; y <= _h; y++) {
       for (let x = 0, _w = this.width - 1; x <= _w; x++) {
         this.data[x][y] = color;
@@ -203,7 +201,7 @@ class GrayImageData {
 class CannyEdgeDetection {
   /**
    * apply gaussian blur to the image data
-   * @param {object} GrayImageData object
+   * @param imgData
    * @param {number} [sigmma=1.4] value of sigmma of gauss function
    * @param {number} [size=3] size of the kernel (must be an odd number)
    * @return {object} GrayImageData object
@@ -257,9 +255,9 @@ class CannyEdgeDetection {
   }
 
   /**
-   * appy sobel filter to image data
-   * @param {object} GrayImageData object
+   * apply sobel filter to image data
    * @return {object} GrayImageData object
+   * @param imgData
    */
   sobel(imgData) {
     let yFiler = [
@@ -289,9 +287,9 @@ class CannyEdgeDetection {
   }
 
   /**
-   * appy non-maximum suppression to image data
-   * @param {object} GrayImageData object
+   * apply non-maximum suppression to image data
    * @return {object} GrayImageData object
+   * @param imgData
    */
   nonMaximumSuppression(imgData) {
     let copy = imgData.copy();
@@ -323,8 +321,8 @@ class CannyEdgeDetection {
   }
 
   /**
-   * appy hysteresis threshold to image data
-   * @param {object} GrayImageData object
+   * Apply hysteresis threshold to image data
+   * @param imgData
    * @param {number} [ht=150] value of high threshold
    * @param {number} [lt=100] value of low threshold
    * @return {object} GrayImageData object
@@ -375,12 +373,12 @@ class CannyEdgeDetection {
   }
 
   /**
-   * appy canny edge detection algorithm to canvas
+   * apply canny edge detection algorithm to canvas
    * @param {object} canvas object
    * @param {number} [ht=100] value of high threshold
    * @param {number} [lt=50] value of low threshold
    * @param {number} [sigmma=1.4] value of sigmma of gauss function
-   * @param {number} [size=3] size of the kernel (must be an odd number)
+   * @param kernelSize
    * @return {object} GrayImageData object
    */
   canny(canvas, ht, lt, sigmma, kernelSize) {
@@ -393,14 +391,14 @@ class CannyEdgeDetection {
   }
 
   /**
-   * appy canny edge detection algorithm to canvas raw data
+   * apply canny edge detection algorithm to canvas raw data
    * @param {number} canvasWidth
    * @param {number} canvasHeight
    * @param {array} canvasRawDate
    * @param {number} [ht=100] value of high threshold
    * @param {number} [lt=50] value of low threshold
    * @param {number} [sigmma=1.4] value of sigmma of gauss function
-   * @param {number} [size=3] size of the kernel (must be an odd number)
+   * @param kernelSize
    * @return {object} GrayImageData object
    */
   cannyWorker(canvasWidth, canvasHeight, canvasRawDate, ht, lt, sigmma, kernelSize) {

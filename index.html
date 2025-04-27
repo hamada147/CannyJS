@@ -1,349 +1,301 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <style type="text/css">
-    html, body {
-      margin: 0;
-      padding: 0;
-    }
-    #progress-bar {
-      transition: all, 0.5s linear 0s;
-      width: 50%;
-      background-color: #eee;
-      border-radius: 2px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
-    }
-    #drop-area {
-      width: 50%;
-      height: 100px;
-      box-sizing: border-box;
-      padding-bottom: 15px;
-      border: 0.25rem dashed #A5A5C7;
-      cursor: default;
-      -webkit-touch-callout: none;
-      -webkit-user-select: none;
-      -khtml-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-    }
-    #drop-area > h3 {
-      color: #868e96;
-      text-align: center;
-    }
-    #drop-area > .btn {
-      position: relative;
-      border-radius: 12px;
-      padding: 7px;
-      width: 50%;
-      margin: auto;
-      color: #fff;
-      background-color: #007bff;
-      cursor: pointer;
-      background-image: none;
-    }
-    #drop-area > .btn > span {
-      color: #fff;
-    }
-    #drop-area > .btn input[type=file] {
-      position: absolute;
-      top: 0;
-      right: 0;
-      margin: 0;
-      border: solid transparent;
-      width: 100%;
-      opacity: 0;
-      cursor: pointer;
-    }
-    h1 {
-      margin-top: 0;
-      padding-top: 0.67em;
-    }
-    #loading {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      z-index: 5;
-      transition: all, 0.5s linear 0s;
-      display: none;
-    }
-    .sk-folding-cube {
-      top: 50%;
-      margin: auto;
-      width: 40px;
-      height: 40px;
-      position: relative;
-      -webkit-transform: rotateZ(45deg);
-      transform: rotateZ(45deg);
-    }
-    .sk-folding-cube .sk-cube {
-      float: left;
-      width: 50%;
-      height: 50%;
-      position: relative;
-      -webkit-transform: scale(1.1);
-      -ms-transform: scale(1.1);
-      transform: scale(1.1);
-    }
-    .sk-folding-cube .sk-cube:before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: #333;
-      -webkit-animation: sk-foldCubeAngle 2.4s infinite linear both;
-      animation: sk-foldCubeAngle 2.4s infinite linear both;
-      -webkit-transform-origin: 100% 100%;
-      -ms-transform-origin: 100% 100%;
-      transform-origin: 100% 100%;
-    }
-    .sk-folding-cube .sk-cube2 {
-      -webkit-transform: scale(1.1) rotateZ(90deg);
-      transform: scale(1.1) rotateZ(90deg);
-    }
-    .sk-folding-cube .sk-cube3 {
-      -webkit-transform: scale(1.1) rotateZ(180deg);
-      transform: scale(1.1) rotateZ(180deg);
-    }
-    .sk-folding-cube .sk-cube4 {
-      -webkit-transform: scale(1.1) rotateZ(270deg);
-      transform: scale(1.1) rotateZ(270deg);
-    }
-    .sk-folding-cube .sk-cube2:before {
-      -webkit-animation-delay: 0.3s;
-      animation-delay: 0.3s;
-    }
-    .sk-folding-cube .sk-cube3:before {
-      -webkit-animation-delay: 0.6s;
-      animation-delay: 0.6s;
-    }
-    .sk-folding-cube .sk-cube4:before {
-      -webkit-animation-delay: 0.9s;
-      animation-delay: 0.9s;
-    }
-    @-webkit-keyframes sk-foldCubeAngle {
-      0%, 10% {
-        -webkit-transform: perspective(140px) rotateX(-180deg);
-        transform: perspective(140px) rotateX(-180deg);
-        opacity: 0;
-      }
-      25%, 75% {
-        -webkit-transform: perspective(140px) rotateX(0deg);
-        transform: perspective(140px) rotateX(0deg);
-        opacity: 1;
-      }
-      90%, 100% {
-        -webkit-transform: perspective(140px) rotateY(180deg);
-        transform: perspective(140px) rotateY(180deg);
-        opacity: 0;
-      } 
-    }
-    @keyframes sk-foldCubeAngle {
-      0%, 10% {
-        -webkit-transform: perspective(140px) rotateX(-180deg);
-        transform: perspective(140px) rotateX(-180deg);
-        opacity: 0; 
-      }
-      25%, 75% {
-        -webkit-transform: perspective(140px) rotateX(0deg);
-        transform: perspective(140px) rotateX(0deg);
-        opacity: 1; 
-      }
-      90%, 100% {
-        -webkit-transform: perspective(140px) rotateY(180deg);
-        transform: perspective(140px) rotateY(180deg);
-        opacity: 0; 
-      }
-    }
-  </style>
-  <title>CannyJS Remake to ECM6</title>
-  <script src="public/js/CannyJS.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
-  <script type="text/javascript" src="public/js/jquery.dm-uploader.js"></script>
-  <script type="text/javascript">
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js').then(function(registration) {
-        console.log('Registration successful, scope is:', registration.scope);
-      }).catch(function(error) {
-        console.log('Service worker registration failed, error:', error);
-      });
-    }
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Canny Edge Detection Demo</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+	<style>
+		:root {
+			--primary-color: #4CAF50;
+			--bg-color: #1a1a1a;
+			--card-bg: #2d2d2d;
+			--text-color: #ffffff;
+		}
 
-    function getRandomColor() {
-      let letters = '0123456789ABCDEF';
-      let color = '#';
-      for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-      }
-      return color;
-    }
+		body {
+			background-color: var(--bg-color);
+			color: var(--text-color);
+			min-height: 100vh;
+		}
 
-    function changeLoadingIndicatorToRandomColor() {
-      let loadingElements = document.getElementsByClassName("sk-cube");
-      let randomColor = getRandomColor();
-      for (let i = 0, size = loadingElements.length; i < size; i++) {
-        loadingElements[i].style.backgroundColor = randomColor;
-      }
-    }
+		.canvas-container {
+			background: #fff;
+			border-radius: 8px;
+			padding: 10px;
+			margin: 10px 0;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+			overflow: scroll;
+		}
 
-    function showLoadingIndicator() {
-      // changeLoadingIndicatorToRandomColor();
-      loading.style.display = 'block';
-    }
+		.param-slider {
+			width: 100%;
+			margin: 15px 0;
+		}
 
-    function hideLoadingIndicator() {
-      // 
-      loading.style.display = 'none';
-    }
+		.neon-border {
+			border: 2px solid var(--primary-color);
+			box-shadow: 0 0 10px var(--primary-color);
+		}
 
-    window.onload = function() {
-      let canvas1 = document.getElementById('canvas1');
-      let canvas2 = document.getElementById('canvas2');
-      let ctx = canvas1.getContext('2d');
-      let image1Btn = document.getElementById("image1");
-      let image2Btn = document.getElementById("image2");
-      let image3Btn = document.getElementById("image3");
-      // let uploadBtn = document.getElementById("custom-image");
-      let htInput = document.getElementById("high-threshold");
-      let ltInput = document.getElementById("low-threshold");
-      let sigmmaInput = document.getElementById("sigmma");
-      let kernelSizeInput = document.getElementById("kernelSize");
-      let executeBtn = document.getElementById("execute");
+		.btn-custom {
+			background: var(--primary-color);
+			color: white;
+			transition: all 0.3s ease;
+		}
 
-      const loading = document.getElementById("loading");
-      const uploadingProgress = document.getElementById("progress-bar");
+		.btn-custom:hover {
+			transform: scale(1.05);
+			box-shadow: 0 0 15px var(--primary-color);
+		}
 
-      let loadImage = function(url) {
-        let img = new Image();
-        img.src = url;
-        // draw loading here
-        showLoadingIndicator();
-        img.onload= function() {
-          canvas1.width = img.width;
-          canvas2.width = img.width;
-          canvas1.height = img.height;
-          canvas2.height = img.height;
-          ctx.drawImage(img, 0, 0);
-          // hide loading here
-          hideLoadingIndicator();
-        }
-      }
-      let onButtonClick = function(e) {
-        loadImage(e.target.value);
-      }
+		.param-label {
+			font-size: 0.9rem;
+			color: #cccccc;
+		}
 
-      $("#drop-area").dmUploader({
-        url: 'upload.php',
-        onFallbackMode: function() {
-          console.log("shit do happens");
-        },
-        onInit: function(){
-          console.log('Callback: Plugin initialized');
-        },
-        onUploadProgress: function(id, percent) {
-          uploadingProgress.value = percent;
-        },
-        onBeforeUpload: function(id) {
-          uploadingProgress.value = '0';
-          console.log('before uploading');
-        },
-        onUploadSuccess: function(id, data) {
-          console.log('finished uploading');
-          loadImage(data.path);
-        },
-        onUploadError: function(id, xhr, status, errorThrown) {
-          console.log(errorThrown);
-        }
-      });
+		.param-value {
+			font-weight: bold;
+			color: var(--primary-color);
+		}
 
-      image1Btn.addEventListener("click", onButtonClick);
-      image2Btn.addEventListener("click", onButtonClick);
-      image3Btn.addEventListener("click", onButtonClick);
-      // uploadBtn.addEventListener("click", uploadImage);
+		.loader-overlay {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(26, 26, 26, 0.9);
+			display: none;
+			justify-content: center;
+			align-items: center;
+			z-index: 1000;
+		}
 
-      let execute = function() {
-        let ht = parseInt(htInput.value);
-        let lt = parseInt(ltInput.value);
-        let sigmma = parseFloat(sigmmaInput.value);
-        let kernelSize = parseInt(kernelSizeInput.value);
-        if (typeof(Worker) !== "undefined" && window.Worker) {
-          // Yes! Web worker support!
-          let start = new Date;
-          let worker = new Worker("public/js/worker.js");
-          let canvasWidth = canvas1.width;
-          let canvasHeight = canvas1.height;
-          let canvasRawDate = canvas1.getContext('2d').getImageData(0, 0, canvas1.width, canvas1.height).data;
-          // draw loading here
-          showLoadingIndicator();
-          worker.postMessage([canvasWidth, canvasHeight, canvasRawDate, ht, lt, sigmma, kernelSize]);
-          worker.onmessage = function(e) {
-            console.log('Message received from worker');
-            let finish = new Date;
-            let duration = (finish-start)/1000;
-            console.log("Detection finished. Duration: "+duration+" seconds.");
-            let image = new GrayImageData(canvas1.width, canvas1.height);
-            image.setData(e.data.data);
-            image.drawOn(canvas2);
-            // hide loading here
-            hideLoadingIndicator();
-          };
-        } else {
-          let start = new Date;
-          let CannyJS = new CannyEdgeDetection();
-          let image = CannyJS.canny(canvas1, ht, lt, sigmma, kernelSize);
-          let finish = new Date;
-          let duration = (finish-start)/1000;
-          console.log("Detection finished. Duration: "+duration+" seconds.");
-          image.drawOn(canvas2);
-        }
-      }
-      executeBtn.addEventListener("click", execute);
-      loadImage("ukiyo-e.png");
-    }
-  </script>
+		.loader {
+			width: 50px;
+			height: 50px;
+			border: 3px solid transparent;
+			border-top: 3px solid var(--primary-color);
+			border-radius: 50%;
+			animation: spin 1s linear infinite;
+			box-shadow: 0 0 15px var(--primary-color);
+		}
+
+		.loader-text {
+			position: absolute;
+			margin-top: 80px;
+			color: var(--primary-color);
+			font-size: 1.2rem;
+			text-shadow: 0 0 10px var(--primary-color);
+		}
+
+		@keyframes spin {
+			0% {
+				transform: rotate(0deg);
+			}
+			100% {
+				transform: rotate(360deg);
+			}
+		}
+	</style>
 </head>
-
 <body>
-  <div id="loading">
-    <div class="sk-folding-cube">
-      <div class="sk-cube1 sk-cube"></div>
-      <div class="sk-cube2 sk-cube"></div>
-      <div class="sk-cube4 sk-cube"></div>
-      <div class="sk-cube3 sk-cube"></div>
-    </div>
-  </div>
-  <h1>Canny JS: A JavaScript Implementation of Canny Edge Detection</h1>
-  <div>
-    <label>Switch image:</label>
-    <button id="image1" value="ukiyo-e.png">Image 1</button>
-    <button id="image2" value="car.jpg">Image 2</button>
-    <button id="image3" value="nishida_2.jpeg">Image 3</button><br/>
-    <div id="drop-area">
-      <h3>Drag and Drop Files Here</h3>
-      <div class="btn">
-        <span>Open the file Browser</span>
-        <input name="image_field" type="file" title="Click to add Files" />
-      </div>
-    </div>
-    <progress id="progress-bar" value="0" max="100">
-  </div>
-  <div>
-    <label>high threshold (0-255):</label>
-    <input type="text" id="high-threshold" value="100"><br/>
-    <label>low threshold (0-255):</label>
-    <input type="text" id="low-threshold" value="50"><br/>
-    <label>sigmma (0.0-):</label>
-    <input type="text" id="sigmma" value="1.4"><br/>
-    <label>kernel size (odd number):</label>
-    <input type="text" id="kernelSize" value="3"><br/>
-  </div>
-  <div>
-    <button id="execute">Detect edges</button>
-  </div>
-  <canvas id="canvas1" width="400px" height="600px"></canvas>
-  <canvas id="canvas2" width="400px" height="600px"></canvas>
+<div class="container py-5">
+	<h1 class="text-center mb-5">Canny Edge Detection Demo</h1>
+
+	<!-- Upload Section -->
+	<div class="card bg-dark mb-4">
+		<div class="card-body">
+			<input type="file" id="imageInput" accept="image/*" class="form-control btn-custom mb-3">
+			<div class="d-flex gap-2">
+				<button class="btn btn-custom" onclick="loadDemoImage('car.jpg')">Load Car</button>
+				<button class="btn btn-custom" onclick="loadDemoImage('nishida_2.jpeg')">Load Nishida</button>
+				<button class="btn btn-custom" onclick="loadDemoImage('ukiyo-e.png')">Load Ukiyo-e</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- Parameters -->
+	<div class="card bg-dark mb-4">
+		<div class="card-body">
+			<div class="row g-3">
+				<div class="col-md-3">
+					<label for="ht" class="param-label">High Threshold: <span id="htValue"
+																			  class="param-value">100</span></label>
+					<input type="range" class="param-slider" id="ht" min="0" max="255" value="100">
+				</div>
+				<div class="col-md-3">
+					<label for="lt" class="param-label">Low Threshold: <span id="ltValue" class="param-value">50</span></label>
+					<input type="range" class="param-slider" id="lt" min="0" max="255" value="50">
+				</div>
+				<div class="col-md-3">
+					<label for="sigma" class="param-label">Sigma: <span id="sigmaValue"
+																		class="param-value">1.4</span></label>
+					<input type="range" class="param-slider" id="sigma" min="0.1" max="3" step="0.1" value="1.4">
+				</div>
+				<div class="col-md-3">
+					<label for="kernel" class="param-label">Kernel Size: <span id="kernelValue"
+																			   class="param-value">3</span></label>
+					<input type="range" class="param-slider" id="kernel" min="3" max="7" step="2" value="3">
+				</div>
+			</div>
+			<button id="processBtn" class="btn btn-custom w-100 mt-3">Detect Edges</button>
+		</div>
+	</div>
+
+	<!-- Canvases -->
+	<div class="row">
+		<div class="col-md-6">
+			<div class="card bg-dark">
+				<div class="card-header">Original Image</div>
+				<div class="card-body">
+					<div class="canvas-container">
+						<canvas id="originalCanvas"></canvas>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="card bg-dark">
+				<div class="card-header">Edge Detection Result</div>
+				<div class="card-body">
+					<div class="canvas-container">
+						<canvas id="resultCanvas"></canvas>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Loading Indicator -->
+<div class="loader-overlay" id="loaderOverlay">
+	<div class="loader"></div>
+	<div class="loader-text">Processing...</div>
+</div>
+
+<script src="public/js/CannyJS.min.js"></script>
+<script>
+	if ('serviceWorker' in navigator) {
+		navigator.serviceWorker.register('service-worker.js').then(function (registration) {
+			console.log('Registration successful, scope is:', registration.scope);
+		}).catch(function (error) {
+			console.log('Service worker registration failed, error:', error);
+		});
+	}
+	const worker = new Worker("public/js/worker.js");
+	const originalCanvas = document.getElementById('originalCanvas');
+	const resultCanvas = document.getElementById('resultCanvas');
+	const ctx = originalCanvas.getContext('2d', {willReadFrequently: true});
+	const resultCtx = resultCanvas.getContext('2d', {willReadFrequently: true});
+
+	// Parameter controls
+	const ht = document.getElementById('ht');
+	const lt = document.getElementById('lt');
+	const sigma = document.getElementById('sigma');
+	const kernel = document.getElementById('kernel');
+	const processBtn = document.getElementById('processBtn');
+
+	let isImageLoaded = false;
+
+	// Update parameter displays
+	function updateParamDisplays() {
+		document.getElementById('htValue').textContent = ht.value;
+		document.getElementById('ltValue').textContent = lt.value;
+		document.getElementById('sigmaValue').textContent = sigma.value;
+		document.getElementById('kernelValue').textContent = kernel.value;
+	}
+
+	function showLoader() {
+		document.getElementById('loaderOverlay').style.display = 'flex';
+		document.getElementById('processBtn').disabled = true;
+	}
+
+	function hideLoader() {
+		document.getElementById('loaderOverlay').style.display = 'none';
+		document.getElementById('processBtn').disabled = false;
+	}
+
+	function loadDemoImage(imageName) {
+		const img = new Image();
+		img.src = `${imageName}`;
+		img.onload = function () {
+			// Set canvas dimensions to match the image
+			originalCanvas.width = img.width;
+			originalCanvas.height = img.height;
+			resultCanvas.width = img.width;
+			resultCanvas.height = img.height;
+
+			// Draw the image on the canvas
+			ctx.drawImage(img, 0, 0);
+
+			// Clear the result canvas
+			resultCtx.clearRect(0, 0, resultCanvas.width, resultCanvas.height);
+			isImageLoaded = true;
+		};
+	}
+
+	// Load image
+	document.getElementById('imageInput').addEventListener('change', function (e) {
+		if (e.target.files && e.target.files[0]) {
+			const img = new Image();
+			img.onload = function () {
+				originalCanvas.width = img.width;
+				originalCanvas.height = img.height;
+				resultCanvas.width = img.width;
+				resultCanvas.height = img.height;
+				ctx.drawImage(img, 0, 0);
+				resultCtx.clearRect(0, 0, resultCanvas.width, resultCanvas.height);
+				isImageLoaded = true; // Set flag when file is loaded
+			};
+			img.src = URL.createObjectURL(e.target.files[0]);
+		}
+	});
+
+	// Process image
+	processBtn.addEventListener('click', function () {
+		if (document.getElementById('imageInput').value !== '' || isImageLoaded) {
+			showLoader();
+			try {
+				const imageData = ctx.getImageData(0, 0, originalCanvas.width, originalCanvas.height);
+				worker.postMessage([
+					originalCanvas.width,
+					originalCanvas.height,
+					imageData.data,
+					parseInt(ht.value),
+					parseInt(lt.value),
+					parseFloat(sigma.value),
+					parseInt(kernel.value)
+				]);
+			} catch (error) {
+				console.error('Processing error:', error);
+			}
+		} else {
+			alert('Please select an image first.');
+		}
+	});
+
+	// Handle worker response
+	worker.onmessage = function (e) {
+		hideLoader();
+		let imgData = resultCtx.createImageData(resultCanvas.width, resultCanvas.height);
+		let image = new GrayImageData(resultCanvas.width, resultCanvas.height);
+		image.setData(e.data.data);
+		let colors = image.toImageDataArray();
+		for (let i = 0, _len = colors.length; i < _len; i++) {
+			imgData.data[i] = colors[i];
+		}
+		resultCtx.putImageData(imgData, 0, 0);
+	};
+
+	// Update parameter values in real-time
+	[ht, lt, sigma, kernel].forEach(input => {
+		input.addEventListener('input', updateParamDisplays);
+	});
+
+	// Initialize parameter displays
+	updateParamDisplays();
+</script>
 </body>
 </html>
